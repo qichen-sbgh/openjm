@@ -2,7 +2,7 @@
 
 | 项 | 值 |
 | --- | --- |
-| 状态 | 生效：Android 导入链路（校验 → 沙盒 → 书架）已实现并有 host 测试；PDF 渲染与进度未接 |
+| 状态 | 生效：Android 导入链路 + PDFium 渲染已实现并有 host 测试；封面与进度落库未接 |
 | 最后更新 | 2026-11-27 |
 | 代码 | [`openjm-mobile`](https://github.com/qichen-sbgh/openjm-mobile) |
 | 关联协议 | [`protocol.md`](protocol.md) |
@@ -93,8 +93,15 @@ expect fun PdfReaderCanvas(
 
 已写：协议核心（头解析、HKDF、Meta、单遍导入）、两端加密原语、两端壳入口、书架 UI 骨架；
 导入落盘链路（`tmp/` 半成品 → 校验通过原子改名 `books/{doc_id}.{ext}` → 书架按 `doc_id` upsert），
-`androidHostTest` 用冻结向量断言了落盘位置、临时文件清理与去重语义。
+`androidHostTest` 用冻结向量断言了落盘位置、临时文件清理与去重语义；
+PDF 渲染（`io.legere:pdfiumandroid`，纵向分页列表 + 首页比例占位，离屏 Bitmap 随列表回收）与阅读页。
 
-未做：口令弹窗（当前只提示“需要口令”）、Room KMP + KSP 持久化（书架仍在内存，重启即清空）、
-PDFium / PDFKit 实接、封面生成、导入进度、真机兼容验证。
+未做：口令弹窗（当前只提示“需要口令”）、Room KMP + KSP 持久化（书架与进度都在内存，重启即清空）、
+首页封面（WebP）、页内偏移恢复（`initialScrollRatio` 已透传但未消费）、真机兼容验证。
 清单维护在仓库 README，不在本文档复制一遍。
+
+## 8. 已知代价
+
+- **APK 体积**：`pdfiumandroid` 的 AAR 带 arm64-v8a / armeabi-v7a / x86 / x86_64 四套 `libpdfium.so`，
+  debug APK 从 11.5MB 涨到 29MB。群内直发前要配 ABI split，或只保留 arm64-v8a（覆盖绝大多数机型）。
+- **渲染无法自动化**：PDFium 是 Android 原生库，跑不了 host 测试，效果只能进真机清单 §3.3。

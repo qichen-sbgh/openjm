@@ -12,7 +12,11 @@
 - `docs/test/acceptance.md`：FR-12 / FR-13 由 ⬜ 升到 🟡（沙盒落盘与书架去重已有自动化用例，真机待验），FR-04 / FR-08 / FR-11 同步移动端进展；
 - `docs/test/test-plan.md`：自动化现状同步到移动端 13 例，L2 口径改为「Android 本地可回放、CI 无向量仓时 skip」，本地环境补上 Windows；
 - `docs/tech/mobile.md`：状态由「骨架已落地，未编译验证」改为「Android 导入链路已实现」，并更新未做项；
-- `docs/process/iteration.md`：M2 状态改为进行中。
+- `docs/process/iteration.md`：M2 状态改为进行中；
+- `docs/test/acceptance.md`：FR-14 / FR-15 / FR-16 由 ⬜ 升 🟡（PDF 渲染已接、进度在内存层回写，真机未验）；
+- `docs/test/test-plan.md`：移动端用例数更新为 15 例，并注明 CI 里 9 例 skip、书架/进度 6 例照跑；
+- `docs/tech/mobile.md`：状态改为「导入链路 + PDFium 渲染已实现」，新增「已知代价」一节（APK 体积、渲染无法自动化）；
+- `docs/process/iteration.md`：M2 状态更新为「导入/沙盒/去重/PDF 渲染已完成，余封面与进度落库」。
 
 ### Added
 - `docs/process/iteration.md`：版本体系、分支与提交、合并门禁、协议变更 SOP、DoD、发布与回滚；
