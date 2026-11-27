@@ -1,6 +1,6 @@
 # 跨端测试向量
 
-协议规范见 [`../docs/protocol-v1.md`](../docs/protocol-v1.md)。这里的每个 `.jm` 都是**冻结样本**：Python、Android、iOS 三端必须给出完全一致的结果，否则说明实现有偏差——不要改样本，去查实现。
+协议规范见 [`../docs/tech/protocol.md`](../docs/tech/protocol.md)。这里的每个 `.jm` 都是**冻结样本**：Python、Android、iOS 三端必须给出完全一致的结果，否则说明实现有偏差——不要改样本，去查实现。
 
 ## 目录
 

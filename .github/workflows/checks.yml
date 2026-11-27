@@ -1,0 +1,30 @@
+name: checks
+
+on:
+  push:
+    paths: ["docs/**", "testvectors/**", "**/*.md", ".github/**"]
+  pull_request:
+    paths: ["docs/**", "testvectors/**", "**/*.md", ".github/**"]
+
+jobs:
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      # 死链、文档头、白名单（文件名不带版本号/日期，防止文档越堆越多）
+      - name: Check doc hygiene
+        run: python .github/scripts/check_docs.py
+
+  vectors:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      # 不依赖 SDK 的结构校验：清单自洽、明文 sha256、头部字段
+      - name: Check manifest integrity
+        run: python .github/scripts/check_vectors.py

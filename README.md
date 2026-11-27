@@ -12,12 +12,12 @@
 
 ## 为什么拆三个仓库
 
-发送端和消费端的代码没有一行能复用（一边 Python，一边 Kotlin 原生加密），合在一起只会让三套 CI 互相干扰。真正需要共享的不是代码，是**字节级行为**——所以共享物落在这里：`docs/protocol-v1.md` 定规则，`testvectors/` 定答案。
+发送端和消费端的代码没有一行能复用（一边 Python，一边 Kotlin 原生加密），合在一起只会让三套 CI 互相干扰。真正需要共享的不是代码，是**字节级行为**——所以共享物落在这里：`docs/tech/protocol.md` 定规则，`testvectors/` 定答案。
 
 跨仓约定只有三条：
 
 1. **协议版本只有一个真相。** 本仓打 tag `proto-v1`，向量跟着 tag 走；另两仓 README 第一行写 `compatible: proto-v1`，CI 按 tag 取向量。不用 submodule 三仓互挂。
-2. **根密钥哪都不进。** 三个仓库都只有 `keys.example.json` / `keys.test.json`，真钥匙走密码管理器，登记表见 [`docs/key-registry.md`](docs/key-registry.md)。
+2. **根密钥哪都不进。** 三个仓库都只有 `keys.example.json` / `keys.test.json`，真钥匙走密码管理器，登记表见 [`docs/tech/key-registry.md`](docs/tech/key-registry.md)。
 3. **对齐验收放本仓。** 谁能解哪个向量，看下面的状态表，不看群消息。
 
 ## 快速开始
@@ -35,7 +35,7 @@ python -m openjm verify testvectors/valid/v01-plain-no-pad.jm
 OPENJM_TESTVECTORS="$PWD/testvectors" python -m pytest ../openjm-sdk/tests/test_conformance.py -q
 ```
 
-真实文档加密（生产密钥自行准备，格式见 [`docs/key-registry.md`](docs/key-registry.md)）：
+真实文档加密（生产密钥自行准备，格式见 [`docs/tech/key-registry.md`](docs/tech/key-registry.md)）：
 
 ```bash
 $OPENJM_KEY_FILE=~/keys/prod.json python -m openjm encrypt 深入理解计算机系统.pdf
@@ -50,21 +50,27 @@ $OPENJM_KEY_FILE=~/keys/prod.json python -m openjm encrypt 深入理解计算机
 | Android（`openjm-mobile`） | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ | 骨架待实现 |
 | iOS（`openjm-mobile`） | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ | 骨架待实现，注意 `kCCModeOptionCTR_BE` |
 
-## 目录
+## 文档
+
+三仓的文档都收在这里，导航见 [`docs/README.md`](docs/README.md)：
 
 ```text
-docs/
-  protocol-v1.md      # 规范正文（冻结）
-  design-v1.md        # 技术设计文档 v1.0 定稿（决策与取舍的来龙去脉）
-  key-registry.md     # key_id 分配与轮换流程，只记用途不记值
-testvectors/
-  manifest.json       # 三端单测唯一入口
-  make_vectors.py     # 向量生成脚本
-  keys.test.json      # 公开测试密钥（key_id=254）
-  plain/ valid/ invalid/
-.github/workflows/
-  verify-vectors.yml  # 校验向量清单与文件未被误改
+docs/README.md                    # 文档导航，先看这个
+docs/requirements/requirements.md # 需求：场景、FR/NFR、非目标、验收口径
+docs/tech/protocol.md             # 协议规范（冻结）
+docs/tech/decisions.md            # 技术决策与被否方案
+docs/tech/sdk.md                  # 发送端设计
+docs/tech/mobile.md               # 移动端设计
+docs/tech/key-registry.md         # key_id 分配与轮换，不记密钥值
+docs/test/test-plan.md            # 分层、环境、缺陷分级、退出标准
+docs/test/acceptance.md           # 需求→用例追溯矩阵、真机清单
+docs/process/iteration.md         # 迭代规范：版本、分支、门禁、DoD、发布
+docs/process/doc-rules.md         # 文档规范：命名、模板、清理
+testvectors/                      # 11 个冻结向量 + 生成脚本
+.github/                          # CI 与 PR 模板
 ```
+
+改代码之前先看 [`docs/process/iteration.md`](docs/process/iteration.md)：三仓的版本号、分支命名、合并门禁、协议变更 SOP 都在里面。
 
 ## 协议关键决策
 
