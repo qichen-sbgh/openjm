@@ -19,7 +19,9 @@
 - `docs/process/iteration.md`：M2 状态更新为「导入/沙盒/去重/PDF 渲染已完成，余封面与进度落库」；
 - `docs/test/acceptance.md`：FR-12 / FR-13 升 ✅（模拟器实测：沙盒只有明文、重复导入不丢进度），FR-16 补上「模拟器已渲染」；
 - `docs/test/test-plan.md`：环境一节补模拟器 AVD（`android-36;default;x86_64`，WHPX 无头），自动化现状加「模拟器 E2E 4 步已跑通」；
-- `docs/tech/mobile.md`：注明链路已在 Android 16 模拟器端到端跑通。
+- `docs/tech/mobile.md`：注明链路已在 Android 16 模拟器端到端跑通；
+- `docs/test/acceptance.md`：FR-14 由 🟡「封面未做」改为「模拟器已验证封面与进度标签」；
+- `docs/tech/mobile.md` / `docs/process/iteration.md`：封面实现后同步「已写 / 未做」与 M2 进度。
 
 ### Added
 - `docs/process/iteration.md`：版本体系、分支与提交、合并门禁、协议变更 SOP、DoD、发布与回滚；
