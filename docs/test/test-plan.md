@@ -38,7 +38,7 @@
 | 生产密钥 | 不参与测试，任何测试都不得引用 |
 | 真实样本 | 自备 PDF，不入库；`.gitignore` 已挡 `*.pdf` / `*.jm` |
 | 真机 | 待建清单，见验收文档 §3 |
-| 模拟器 | AVD `openjm36`：`system-images;android-36;default;x86_64`，WHPX 加速、`-no-window` 无头启动；用 `adb` + `uiautomator` 驱动，承担本地 E2E 与回归（不占真机） |
+| 模拟器 | AVD `openjm36`：`system-images;android-36;default;x86_64`，WHPX 加速、`-no-window` 无头启动；端到端回归用 `openjm-mobile/tools/emulator-e2e.ps1`（自动起模拟器、构建、按文本定位点控件） |
 
 ## 4. 自动化现状
 
@@ -48,7 +48,7 @@
 | SDK 单测 | 30 | ✅ 本地 + CI 绿 |
 | SDK 跨端向量回放 | 12 | ✅ 绿 |
 | 移动端 androidHostTest | 20（3 向量回放 + 6 沙盒落盘 + 6 书架/进度 + 5 持久化） | ✅ 本地全过；CI 里向量相关的 9 例 skip，其余 11 例照跑 |
-| 移动端模拟器 E2E | 4 步（VIEW 唤起 → 导入 → 阅读 → 进度回填） | ✅ 本地跑通（`adb` 脚本），未进 CI |
+| 移动端模拟器 E2E | 5 步（空书架 → VIEW 导入 → 阅读 → 返回写进度 → 杀进程还原） | ✅ 本地一条命令：`openjm-mobile/tools/emulator-e2e.ps1 -Fresh`，未进 CI |
 | 移动端真机 E2E | 0 | ⬜ 手工 |
 
 > 移动端已能编译并回放向量（M1 完成），L2 在 Android 侧不再是缺口。
@@ -59,7 +59,7 @@
 
 - **每次 push**：L0 + L1 自动跑，红了不许合并（见 [`iteration.md`](../process/iteration.md) §4）。
 - **每次改协议或向量**：L2 必须在三端各跑一遍，结果贴到 PR 描述里。
-- **每个迭代收口**：L3 关键路径走一遍（导入、去重、进度恢复、截断提示）。
+- **每个迭代收口**：先跑 `openjm-mobile/tools/emulator-e2e.ps1 -Fresh`（模拟器端到端，一条命令），再按真机清单验 ROM 相关项（唤起、SAF、沙盒可见性）。
 - **每个发版**：L4 兼容矩阵 + 性能采样，结果写进 PR 描述（不落成仓库文件）。
 
 ## 6. 缺陷分级
