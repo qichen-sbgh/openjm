@@ -4,7 +4,7 @@
 | --- | --- |
 | 状态 | 生效 |
 | 最后更新 | 2026-11-27 |
-| 关联协议 | [`protocol.md`](protocol.md) §8 |
+| 关联协议 | [`protocol.md`](protocol.md) §9 |
 
 **这里只登记 key_id 的用途与生命周期，永远不写密钥值。** 真实密钥存放在密码管理器 / 部署系统的密钥库里，通过 `OPENJM_KEY_FILE` 注入；仓库里只有 `testvectors/keys.test.json` 这一份公开测试密钥。
 
