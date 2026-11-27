@@ -14,7 +14,8 @@
 - `docs/process/iteration.md`：版本体系、分支与提交、合并门禁、协议变更 SOP、DoD、发布与回滚；
 - `docs/test/test-plan.md`、`docs/test/acceptance.md`：测试分层与需求追溯矩阵；
 - `docs/requirements/requirements.md`：FR-01..FR-19、NFR-01..NFR-05 与验收口径；
-- CI 增加文档卫生检查：相对链接可达、文档头齐全、`docs/` 文件白名单（防文档越堆越多）。
+- CI 增加文档卫生检查：相对链接可达、文档头齐全、`docs/` 文件白名单（防文档越堆越多）；
+- `.gitattributes`：`testvectors/**` 按二进制处理，修掉 Git for Windows 默认 `core.autocrlf=true` 把 `plain/*.pdf` 转成 CRLF、导致本地 `check_vectors.py` 误报「明文 sha256 与清单不符」的问题。
 
 ## [proto-v1] - 2026-11-27
 

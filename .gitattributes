@@ -1,0 +1,9 @@
+# 向量一律按二进制处理。
+#
+# `testvectors/plain/*.pdf` 是极简 PDF，没有 NUL 字节，Git 会当成文本；
+# 而 Git for Windows 默认 `core.autocrlf=true`，检出时 LF→CRLF，
+# `hello-openjm.pdf` 就从 603 字节变成 637 字节，本地 `check_vectors.py`
+# 报"明文 sha256 与清单不符"，Linux CI 却是绿的 —— 典型的"本地红、远端绿"。
+#
+# 这里固定 -text（不做任何换行转换），保证任何平台检出后的字节都等于 blob。
+testvectors/** -text
