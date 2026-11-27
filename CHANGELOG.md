@@ -21,7 +21,10 @@
 - `docs/test/test-plan.md`：环境一节补模拟器 AVD（`android-36;default;x86_64`，WHPX 无头），自动化现状加「模拟器 E2E 4 步已跑通」；
 - `docs/tech/mobile.md`：注明链路已在 Android 16 模拟器端到端跑通；
 - `docs/test/acceptance.md`：FR-14 由 🟡「封面未做」改为「模拟器已验证封面与进度标签」；
-- `docs/tech/mobile.md` / `docs/process/iteration.md`：封面实现后同步「已写 / 未做」与 M2 进度。
+- `docs/tech/mobile.md` / `docs/process/iteration.md`：封面实现后同步「已写 / 未做」与 M2 进度；
+- `docs/tech/mobile.md`：新增 §5.1「持久化选型」（JSON vs 内存 vs Room KMP 的取舍与替换成本）；
+- `docs/test/acceptance.md`：FR-15 升 ✅（持久化 + 模拟器杀进程实测），`test-plan.md` 用例数同步到 20；
+- `docs/process/iteration.md`：M2 标记完成（模拟器验证，真机兼容留 M3），`decisions.md` 待定项补「书架持久化实现」。
 
 ### Added
 - `docs/process/iteration.md`：版本体系、分支与提交、合并门禁、协议变更 SOP、DoD、发布与回滚；
