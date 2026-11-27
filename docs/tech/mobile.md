@@ -94,11 +94,12 @@ expect fun PdfReaderCanvas(
 已写：协议核心（头解析、HKDF、Meta、单遍导入）、两端加密原语、两端壳入口、书架 UI 骨架；
 导入落盘链路（`tmp/` 半成品 → 校验通过原子改名 `books/{doc_id}.{ext}` → 书架按 `doc_id` upsert），
 `androidHostTest` 用冻结向量断言了落盘位置、临时文件清理与去重语义；
-PDF 渲染（`io.legere:pdfiumandroid`，纵向分页列表 + 首页比例占位，离屏 Bitmap 随列表回收）与阅读页。
+PDF 渲染（`io.legere:pdfiumandroid`，纵向分页列表 + 首页比例占位，离屏 Bitmap 随列表回收）与阅读页；
+首帧封面（WebP，`covers/{doc_id}.webp`，书架 48×64dp 缩略图，失败退回占位块）。
 整条链路已在 Android 16 模拟器上端到端跑通：VIEW 唤起 → 导入落盘 → 书架 → 阅读 → 进度回填。
 
 未做：口令弹窗（当前只提示“需要口令”）、Room KMP + KSP 持久化（书架与进度都在内存，重启即清空）、
-首页封面（WebP）、页内偏移恢复（`initialScrollRatio` 已透传但未消费）、真机兼容验证。
+页内偏移恢复（`initialScrollRatio` 已透传但未消费）、真机兼容验证。
 清单维护在仓库 README，不在本文档复制一遍。
 
 ## 8. 已知代价
