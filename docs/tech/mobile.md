@@ -73,6 +73,17 @@ openjm-mobile/
 | `scrollRatio` | Float | 纵向滚动比例，防横竖屏跑偏 |
 | `importedAt` / `lastReadAt` | Long | 导入 / 最近阅读时间戳（默认排序依据） |
 
+### 5.1 持久化选型
+
+| 方案 | 结论 | 原因 |
+| --- | --- | --- |
+| 内存（`InMemoryBookRepository`） | 仅测试用 | 进程一杀就清空，FR-15 直接不成立 |
+| **JSON 文件（`books/index.json`）** | **当前实现** | 数据量是"一个人几十本书、十来个字段"；原子写 30 行搞定，坏文件可降级为空书架，host 测试能完整覆盖 |
+| Room KMP + KSP（D8 原计划） | 暂缓 | 要带 KSP2 + schema 导出 + 迁移；KSP 版本线与 Kotlin 2.4.10 没有官方匹配矩阵；iOS 冻结期没有跨端共享 schema 的诉求 |
+
+替换成本被 `BookRepository` 接口压到一个类：换实现只动 `JsonBookRepository`，调用方零改动。
+重新评估的触发条件：书架需要字段查询之外的检索能力（全文、多表关联），或 iOS 解冻后要跟 Android 共享 schema。
+
 ## 6. 阅读器桥与进度
 
 ```kotlin
@@ -95,11 +106,11 @@ expect fun PdfReaderCanvas(
 导入落盘链路（`tmp/` 半成品 → 校验通过原子改名 `books/{doc_id}.{ext}` → 书架按 `doc_id` upsert），
 `androidHostTest` 用冻结向量断言了落盘位置、临时文件清理与去重语义；
 PDF 渲染（`io.legere:pdfiumandroid`，纵向分页列表 + 首页比例占位，离屏 Bitmap 随列表回收）与阅读页；
-首帧封面（WebP，`covers/{doc_id}.webp`，书架 48×64dp 缩略图，失败退回占位块）。
-整条链路已在 Android 16 模拟器上端到端跑通：VIEW 唤起 → 导入落盘 → 书架 → 阅读 → 进度回填。
+首帧封面（WebP，`covers/{doc_id}.webp`，书架 48×64dp 缩略图，失败退回占位块）；
+书架与进度落盘（`books/index.json`，原子写，坏文件降级为空书架）。
+整条链路已在 Android 16 模拟器上端到端跑通：VIEW 唤起 → 导入落盘 → 书架 → 阅读 → 进度回填 → 杀进程冷启动还原。
 
-未做：口令弹窗（当前只提示“需要口令”）、Room KMP + KSP 持久化（书架与进度都在内存，重启即清空）、
-页内偏移恢复（`initialScrollRatio` 已透传但未消费）、真机兼容验证。
+未做：口令弹窗（当前只提示“需要口令”）、页内偏移恢复（`initialScrollRatio` 已透传但未消费）、真机兼容验证。
 清单维护在仓库 README，不在本文档复制一遍。
 
 ## 8. 已知代价
