@@ -90,7 +90,7 @@
 
 | 项 | 现状 | 决策点 |
 | --- | --- | --- |
-| 生产根密钥生成与注入 | `key_id=1` 预留未启用 | 首次群内灰度前必须定，见 [`key-registry.md`](key-registry.md) |
-| 封面缩略图格式 | 设计里写 WebP | Android/iOS 编码器差异，实现时定 |
+| 生产根密钥生成与注入 | 已定“密钥不进 git”：开发期 App 读 `androidApp/src/main/assets/keys.json`（`.gitignore` 已挡），发布时由 CI secret 写入同一路径；`key_id=1` 仍预留未启用 | 灰度前只剩“CI secret 怎么管”（谁来配、谁能读），不涉及协议 |
+| 封面缩略图格式 | 已定 WebP（Android `Bitmap.compress(WEBP_LOSSY, 80)`），只存首帧静图 | iOS 解冻时对齐：PDFKit 出图后同样编码 WebP |
 | 应用商店上架定位 | 首版只群内直发 | 真要上架时按“个人隐私加密文档阅读器”包装，并补本地 `.jm` 生成与内置示例，避免被判空壳 |
 | 超大 PDF Seek | 协议已支持，App 未实现 | M4 之后 |

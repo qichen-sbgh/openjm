@@ -18,6 +18,17 @@
 | `0xFE` (254) | 跨端测试向量 | 生效 | 2026-11-27 | — | 公开测试密钥，见 `testvectors/README.md`，禁止用于真实文档 |
 | `0xFF` (255) | 保留 | — | — | — | 不使用，防止将来越界误用 |
 
+## 注入路径（暂定）
+
+原则只有一条：**密钥值永远不进 git**。仓库里只有 `testvectors/keys.test.json` 这一份公开测试密钥。
+
+| 消费方 | 路径 | 说明 |
+| --- | --- | --- |
+| App | `androidApp/src/main/assets/keys.json` | 文件已在 `.gitignore` 里；开发机自备，发布时由 CI secret 写入同一路径 |
+| SDK | `OPENJM_KEY_FILE` | 指向部署系统密钥库导出的 json |
+
+灰度前还需要定的只是“CI secret 由谁配、谁能读”，与协议无关。
+
 ## 轮换流程
 
 1. 生成新的 32 字节随机根密钥，分配下一个空闲 `key_id`，登记到上表。
