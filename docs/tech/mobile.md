@@ -107,10 +107,11 @@ expect fun PdfReaderCanvas(
 `androidHostTest` 用冻结向量断言了落盘位置、临时文件清理与去重语义；
 PDF 渲染（`io.legere:pdfiumandroid`，纵向分页列表 + 首页比例占位，离屏 Bitmap 随列表回收）与阅读页；
 首帧封面（WebP，`covers/{doc_id}.webp`，书架 48×64dp 缩略图，失败退回占位块）；
-书架与进度落盘（`books/index.json`，原子写，坏文件降级为空书架）。
+书架与进度落盘（`books/index.json`，原子写，坏文件降级为空书架）；
+口令弹窗（`PasswordPrompt`，先验证再落盘，错口令不留文件；口令文件的"免密续读"由"只存明文"结构性满足）。
 整条链路已在 Android 16 模拟器上端到端跑通：VIEW 唤起 → 导入落盘 → 书架 → 阅读 → 进度回填 → 杀进程冷启动还原。
 
-未做：口令弹窗（当前只提示“需要口令”）、页内偏移恢复（`initialScrollRatio` 已透传但未消费）、真机兼容验证。
+未做：页内偏移恢复（`initialScrollRatio` 已透传但未消费）、真机兼容验证。
 清单维护在仓库 README，不在本文档复制一遍。
 
 ## 8. 已知代价

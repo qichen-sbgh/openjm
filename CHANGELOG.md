@@ -25,7 +25,8 @@
 - `docs/tech/mobile.md`：新增 §5.1「持久化选型」（JSON vs 内存 vs Room KMP 的取舍与替换成本）；
 - `docs/test/acceptance.md`：FR-15 升 ✅（持久化 + 模拟器杀进程实测），`test-plan.md` 用例数同步到 20；
 - `docs/process/iteration.md`：M2 标记完成（模拟器验证，真机兼容留 M3），`decisions.md` 待定项补「书架持久化实现」；
-- `docs/test/test-plan.md`：模拟器 E2E 明确定义为「一条命令」（`openjm-mobile/tools/emulator-e2e.ps1 -Fresh`），并入迭代收口步骤。
+- `docs/test/test-plan.md`：模拟器 E2E 明确定义为「一条命令」（`openjm-mobile/tools/emulator-e2e.ps1 -Fresh`），并入迭代收口步骤；
+- `docs/test/acceptance.md`：FR-04 / FR-17 升 ✅（口令弹窗已接；免密续读由「只存明文」结构性满足），`docs/tech/mobile.md` 未做项去掉口令弹窗。
 
 ### Added
 - `docs/process/iteration.md`：版本体系、分支与提交、合并门禁、协议变更 SOP、DoD、发布与回滚；
