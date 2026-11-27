@@ -16,7 +16,10 @@
 - `docs/test/acceptance.md`：FR-14 / FR-15 / FR-16 由 ⬜ 升 🟡（PDF 渲染已接、进度在内存层回写，真机未验）；
 - `docs/test/test-plan.md`：移动端用例数更新为 15 例，并注明 CI 里 9 例 skip、书架/进度 6 例照跑；
 - `docs/tech/mobile.md`：状态改为「导入链路 + PDFium 渲染已实现」，新增「已知代价」一节（APK 体积、渲染无法自动化）；
-- `docs/process/iteration.md`：M2 状态更新为「导入/沙盒/去重/PDF 渲染已完成，余封面与进度落库」。
+- `docs/process/iteration.md`：M2 状态更新为「导入/沙盒/去重/PDF 渲染已完成，余封面与进度落库」；
+- `docs/test/acceptance.md`：FR-12 / FR-13 升 ✅（模拟器实测：沙盒只有明文、重复导入不丢进度），FR-16 补上「模拟器已渲染」；
+- `docs/test/test-plan.md`：环境一节补模拟器 AVD（`android-36;default;x86_64`，WHPX 无头），自动化现状加「模拟器 E2E 4 步已跑通」；
+- `docs/tech/mobile.md`：注明链路已在 Android 16 模拟器端到端跑通。
 
 ### Added
 - `docs/process/iteration.md`：版本体系、分支与提交、合并门禁、协议变更 SOP、DoD、发布与回滚；
