@@ -30,7 +30,8 @@
 - `docs/tech/mobile.md`：未做项去掉「页内偏移恢复」，§8 更新 APK 体积口径（release 16MB）；`docs/test/test-plan.md` 模拟器 E2E 改为 6 步；
 - 2026-11-27 决定：**用模拟器代替真机验收**（`iteration.md` 的 M3 与 `test-plan.md` 的真机口径同步改写），FR-07 / FR-08 由 ⬜ 升 🟡（模拟器已验证，真实 QQ / SAF 未验）；
 - `docs/tech/mobile.md`：「已写」补导入进度反馈与自适应图标；
-- `docs/tech/mobile.md`：「已写」补书架管理（改名/删除）、阅读页页码条与深色主题。
+- `docs/tech/mobile.md`：「已写」补书架管理（改名/删除）、阅读页页码条与深色主题；
+- 2026-11-28 **v1 范围冻结**：FR-18 / FR-19 取消交付、NFR-01 改为非门槛，需求与验收矩阵就地标注（⏸），`iteration.md` §3.1 记明"功能需求封口，剩下只有发版准备"。
 
 ### Added
 - `docs/process/iteration.md`：版本体系、分支与提交、合并门禁、协议变更 SOP、DoD、发布与回滚；
