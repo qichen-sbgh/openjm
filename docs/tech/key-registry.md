@@ -13,7 +13,7 @@
 | key_id | 用途 | 状态 | 启用日期 | 停用日期 | 备注 |
 | --- | --- | --- | --- | --- | --- |
 | `0x00` | 口令模式标记 | — | — | — | 不是密钥，`key_id` 字段恒写 0 |
-| `0x01` | 生产根密钥 v1 | 预留 | — | — | 首次群内灰度时装进 App 与 SDK 部署环境 |
+| `0x01` | 生产根密钥 v1 | **启用** | 2026-11-28 | — | 已装进 App（`assets/keys.json`）与 SDK 的 `OPENJM_KEY_FILE`；密钥值存在仓库外（本机 `.secrets/keys.prod.json`），**不入库**，换机器要随包带走 |
 | `0x02` | 轮换预备位 | 空 | — | — | 预留给第一次轮换 |
 | `0xFE` (254) | 跨端测试向量 | 生效 | 2026-11-27 | — | 公开测试密钥，见 `testvectors/README.md`，禁止用于真实文档 |
 | `0xFF` (255) | 保留 | — | — | — | 不使用，防止将来越界误用 |
@@ -24,8 +24,8 @@
 
 | 消费方 | 路径 | 说明 |
 | --- | --- | --- |
-| App | `androidApp/src/main/assets/keys.json` | 文件已在 `.gitignore` 里；开发机自备，发布时由 CI secret 写入同一路径 |
-| SDK | `OPENJM_KEY_FILE` | 指向部署系统密钥库导出的 json |
+| App | `androidApp/src/main/assets/keys.json` | 文件已在 `.gitignore` 里；当前内容为 `{"1": <生产>, "254": <测试向量>}`——测试密钥留着跑冻结向量，公开无害 |
+| SDK | `OPENJM_KEY_FILE` | 指向部署系统密钥库导出的 json；本机是 `.secrets/keys.prod.json`（同样不入库） |
 
 灰度前还需要定的只是“CI secret 由谁配、谁能读”，与协议无关。
 
