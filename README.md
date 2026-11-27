@@ -85,11 +85,11 @@ testvectors/                      # 11 个冻结向量 + 生成脚本
 
 ## 路线
 
-- [x] 协议 v1 冻结、Python 参考实现、跨端测试向量集
-- [ ] KMP 共享加密核心与两端 `expect/actual` 互测
-- [ ] QQ 唤起真机兼容性（`.jm.1`、`application/octet-stream`、SAF 兜底）
-- [ ] 书架 + 阅读进度闭环，群内灰度包
-- [ ] 远期：超大 PDF 零落盘按需解密（CTR 随机偏移，v1 协议无需改动）
+已完成：协议 v1 冻结、Python 参考实现、11 个跨端向量、文档与流程基线。
+
+当前**只推 Android**（iOS 冻结，见 [`decisions.md`](docs/tech/decisions.md) D10）。里程碑 M1–M4、进入条件与状态维护在 [`iteration.md`](docs/process/iteration.md) §3.1，这里不再重复。
+
+远期：超大 PDF 零落盘按需解密（CTR 随机偏移，v1 协议无需改动）。
 
 ## 不做什么
 
