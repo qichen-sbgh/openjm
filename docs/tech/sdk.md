@@ -2,8 +2,8 @@
 
 | 项 | 值 |
 | --- | --- |
-| 状态 | 已实现（v0.1.0） |
-| 最后更新 | 2026-11-27 |
+| 状态 | 已实现（v0.1.0，tag `sdk-v0.1.0`） |
+| 最后更新 | 2026-11-28 |
 | 代码 | [`openjm-sdk`](https://github.com/qichen-sbgh/openjm-sdk) |
 | 关联协议 | [`protocol.md`](protocol.md) |
 
@@ -68,3 +68,22 @@ CLI 是给 QQ 机器人流水线用的“能直接塞进 shell 的入口”，�
 - 不做密钥分发（只认 `OPENJM_KEY_FILE` 或显式传入）；
 - 不做上传、不做 PDF 解析、不做压缩；
 - 不实现阅读侧（那在 `openjm-mobile`），本仓的解密只用于校验与测试。
+
+## 7. 使用方：AstrBot 插件
+
+[`astrbot_plugin_openjm`](https://github.com/qichen-sbgh/astrbot_plugin_openjm) 是第一个把本 SDK 用在自动化流水线里的仓：
+群里有人发 JM 号 → 下载 → 合成 PDF → 调 `JMCrypto.encrypt_file(..., mask_name=True)` → 只把 `.jm` 发回群。
+
+它的集成方式刻意做得很薄：
+
+| 项 | 做法 | 原因 |
+| --- | --- | --- |
+| SDK 引入 | `requirements.txt` 里 `openjm @ git+...@sdk-v0.1.0` | 依赖而不是复制代码：协议实现只能有一份，复制必漂移 |
+| 版本 | pin 到 tag `sdk-v0.1.0` | `@main` 是浮动的，上游改接口会把插件带崩 |
+| 密钥 | 插件内置了与 App 同一把（`key_id=1`） | 对称加密两端必须一致；而这把钥匙本就随公开 APK 一起公开，见下 |
+
+**关于内置密钥的取舍**：`.jm` 是对称加密，插件加密、App 解密必须同一把根密钥，而 App 里的那把在打包时焊死。
+它的"秘密性"本来就有限——正式包 `openjm-0.1.0.apk` 是公开发布物，钥匙就在 `assets/keys.json` 里，`unzip` 一行命令即可取出。
+项目在 [`decisions.md`](decisions.md) 里写明安全边界是「躲群文件扫描与哈希指纹」，不对抗逆向，所以把同一把钥匙放进插件源码，
+换来的是"装上就能用"；`decisions.md` 待定项里"密钥注入方式"一栏由此补上了实际做法。
+要提升强度只能换钥匙并重新打包 App，代价是老文件与旧版 App 的兼容。

@@ -2,22 +2,23 @@
 
 `.jm` 加密文档容器。发送端把 PDF 封装成 `.jm` 丢进 QQ 群，接收端点开、校验、解密，落进自己的书架里读。
 
-这个仓库是**协议与契约的单一真相**：规范、跨端测试向量、密钥登记都在这儿，另外两个仓库围着它对齐。
+这个仓库是**协议与契约的单一真相**：规范、跨端测试向量、密钥登记都在这儿，另外三个仓库围着它对齐。
 
 | 仓库 | 角色 | 技术栈 |
 | --- | --- | --- |
 | **`openjm`**（本仓） | 协议 v1 规范、跨端测试向量、密钥登记、路线图 | Markdown + Python（生成脚本） |
 | [`openjm-sdk`](https://github.com/qichen-sbgh/openjm-sdk) | 发送端加密 SDK、校验/解密参考实现 | Python 3.9+ / `cryptography` |
 | [`openjm-mobile`](https://github.com/qichen-sbgh/openjm-mobile) | 阅读器 App（Android + iOS） | Kotlin Multiplatform + Compose Multiplatform |
+| [`astrbot_plugin_openjm`](https://github.com/qichen-sbgh/astrbot_plugin_openjm) | 群聊自动化：群里发 JM 号 → 出 PDF → 加密 `.jm` 发回群 | Python（AstrBot 插件，依赖 SDK） |
 
-## 为什么拆三个仓库
+## 为什么拆成多个仓库
 
-发送端和消费端的代码没有一行能复用（一边 Python，一边 Kotlin 原生加密），合在一起只会让三套 CI 互相干扰。真正需要共享的不是代码，是**字节级行为**——所以共享物落在这里：`docs/tech/protocol.md` 定规则，`testvectors/` 定答案。
+发送端、消费端、群聊自动化的代码没有一行能复用（一边 Python、一边 Kotlin 原生加密、一边是机器人插件），合在一起只会让多套 CI 互相干扰。真正需要共享的不是代码，是**字节级行为**——所以共享物落在这里：`docs/tech/protocol.md` 定规则，`testvectors/` 定答案。
 
 跨仓约定只有三条：
 
-1. **协议版本只有一个真相。** 本仓打 tag `proto-v1`，向量跟着 tag 走；另两仓 README 第一行写 `compatible: proto-v1`，CI 按 tag 取向量。不用 submodule 三仓互挂。
-2. **根密钥哪都不进。** 三个仓库都只有 `keys.example.json` / `keys.test.json`，真钥匙走密码管理器，登记表见 [`docs/tech/key-registry.md`](docs/tech/key-registry.md)。
+1. **协议版本只有一个真相。** 本仓打 tag `proto-v1`，向量跟着 tag 走；两个实现仓（SDK / mobile）README 第一行写 `compatible: proto-v1`，CI 按 tag 取向量。插件仓不实现协议，只把自己的 SDK 依赖 pin 到 `sdk-vX.Y.Z`。不用 submodule 互挂。
+2. **根密钥哪都不进。** 仓库里只有 `keys.example.json` / `keys.test.json`，真钥匙走密码管理器，登记表见 [`docs/tech/key-registry.md`](docs/tech/key-registry.md)。唯一例外是插件仓内置了与 App 同一把根密钥（对称加密两端必须一致，且这把钥匙已随公开发布的 APK 一起公开，理由见 [`docs/tech/sdk.md`](docs/tech/sdk.md) §7）。
 3. **对齐验收放本仓。** 谁能解哪个向量，看下面的状态表，不看群消息。
 
 ## 快速开始
@@ -46,13 +47,14 @@ $OPENJM_KEY_FILE=~/keys/prod.json python -m openjm encrypt 深入理解计算机
 
 | 实现 | 头部解析 | 无感模式 | 口令模式 | 填充剥离 | 反例 | 状态 |
 | --- | --- | --- | --- | --- | --- | --- |
-| Python（`openjm-sdk`） | ✅ | ✅ | ✅ | ✅ | ✅ | 向量全过 |
-| Android（`openjm-mobile`） | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ | 骨架待实现 |
-| iOS（`openjm-mobile`） | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ | 骨架待实现，注意 `kCCModeOptionCTR_BE` |
+| Python（`openjm-sdk`） | ✅ | ✅ | ✅ | ✅ | ✅ | 向量全过（本地 + CI） |
+| Android（`openjm-mobile`） | ✅ | ✅ | ✅ | ✅ | ✅ | 向量全过（本地 + CI；导入→阅读链路在模拟器 E2E 验证） |
+| iOS（`openjm-mobile`） | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ | ⏸ 冻结，等 M4；注意 `kCCModeOptionCTR_BE` |
+| 插件（`astrbot_plugin_openjm`） | — | — | — | — | — | 不实现协议，只调 SDK 加密（pin `sdk-v0.1.0`） |
 
 ## 文档
 
-三仓的文档都收在这里，导航见 [`docs/README.md`](docs/README.md)：
+四个仓库的设计文档都收在这里，导航见 [`docs/README.md`](docs/README.md)：
 
 ```text
 docs/README.md                    # 文档导航，先看这个
@@ -70,7 +72,7 @@ testvectors/                      # 11 个冻结向量 + 生成脚本
 .github/                          # CI 与 PR 模板
 ```
 
-改代码之前先看 [`docs/process/iteration.md`](docs/process/iteration.md)：三仓的版本号、分支命名、合并门禁、协议变更 SOP 都在里面。
+改代码之前先看 [`docs/process/iteration.md`](docs/process/iteration.md)：四仓的版本号、分支命名、合并门禁、协议变更 SOP 都在里面。
 
 ## 协议关键决策
 

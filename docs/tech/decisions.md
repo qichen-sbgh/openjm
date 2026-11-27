@@ -90,7 +90,7 @@
 
 | 项 | 现状 | 决策点 |
 | --- | --- | --- |
-| 生产根密钥生成与注入 | 已定“密钥不进 git”：开发期 App 读 `androidApp/src/main/assets/keys.json`（`.gitignore` 已挡），发布时由 CI secret 写入同一路径；`key_id=1` 仍预留未启用 | 灰度前只剩“CI secret 怎么管”（谁来配、谁能读），不涉及协议 |
+| 生产根密钥生成与注入 | 已定并已落地：`key_id=1` 启用（2026-11-28）；App 打包时由 CI secret 写入 `assets/keys.json`，SDK 读 `OPENJM_KEY_FILE`，插件内置同一把（理由见 [`sdk.md`](sdk.md) §7） | 只剩灰度时「谁能读 CI secret」的管理问题，不涉及协议 |
 | 封面缩略图格式 | 已定并已实现：WebP（`Bitmap.compress(WEBP_LOSSY, 80)`），只存首帧静图 | iOS 解冻时对齐：PDFKit 出图后同样编码 WebP |
 | 书架持久化实现 | 暂用 JSON 文件 `books/index.json`（原子写），`BookRepository` 接口不变；Room KMP + KSP 暂缓，理由见 [`mobile.md`](mobile.md) §5.1 | 需要字段检索/多表关联，或 iOS 解冻后要共享 schema 时再评估 |
 | 应用商店上架定位 | 首版只群内直发 | 真要上架时按“个人隐私加密文档阅读器”包装，并补本地 `.jm` 生成与内置示例，避免被判空壳 |
