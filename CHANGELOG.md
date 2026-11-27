@@ -28,7 +28,8 @@
 - `docs/test/test-plan.md`：模拟器 E2E 明确定义为「一条命令」（`openjm-mobile/tools/emulator-e2e.ps1 -Fresh`），并入迭代收口步骤；
 - `docs/test/acceptance.md`：FR-04 / FR-17 升 ✅（口令弹窗已接；免密续读由「只存明文」结构性满足），`docs/tech/mobile.md` 未做项去掉口令弹窗；
 - `docs/tech/mobile.md`：未做项去掉「页内偏移恢复」，§8 更新 APK 体积口径（release 16MB）；`docs/test/test-plan.md` 模拟器 E2E 改为 6 步；
-- 2026-11-27 决定：**用模拟器代替真机验收**（`iteration.md` 的 M3 与 `test-plan.md` 的真机口径同步改写），FR-07 / FR-08 由 ⬜ 升 🟡（模拟器已验证，真实 QQ / SAF 未验）。
+- 2026-11-27 决定：**用模拟器代替真机验收**（`iteration.md` 的 M3 与 `test-plan.md` 的真机口径同步改写），FR-07 / FR-08 由 ⬜ 升 🟡（模拟器已验证，真实 QQ / SAF 未验）；
+- `docs/tech/mobile.md`：「已写」补导入进度反馈与自适应图标。
 
 ### Added
 - `docs/process/iteration.md`：版本体系、分支与提交、合并门禁、协议变更 SOP、DoD、发布与回滚；
