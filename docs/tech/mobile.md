@@ -95,6 +95,7 @@ expect fun PdfReaderCanvas(
 导入落盘链路（`tmp/` 半成品 → 校验通过原子改名 `books/{doc_id}.{ext}` → 书架按 `doc_id` upsert），
 `androidHostTest` 用冻结向量断言了落盘位置、临时文件清理与去重语义；
 PDF 渲染（`io.legere:pdfiumandroid`，纵向分页列表 + 首页比例占位，离屏 Bitmap 随列表回收）与阅读页。
+整条链路已在 Android 16 模拟器上端到端跑通：VIEW 唤起 → 导入落盘 → 书架 → 阅读 → 进度回填。
 
 未做：口令弹窗（当前只提示“需要口令”）、Room KMP + KSP 持久化（书架与进度都在内存，重启即清空）、
 首页封面（WebP）、页内偏移恢复（`initialScrollRatio` 已透传但未消费）、真机兼容验证。
