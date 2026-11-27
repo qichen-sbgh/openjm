@@ -1,0 +1,129 @@
+{
+  "protocol": "JM01",
+  "generated_at": "2026-11-27T17:00:22+08:00",
+  "generator": "testvectors/make_vectors.py",
+  "test_key_id": 254,
+  "keys_file": "keys.test.json",
+  "note": "keys.test.json 里的密钥由 sha256(b'openjm-test-vector-key-v1') 派生，仅用于向量，禁止用于真实文档。",
+  "vectors": [
+    {
+      "id": "v01-plain-no-pad",
+      "kind": "valid",
+      "file": "valid/v01-plain-no-pad.jm",
+      "source": "plain/hello-openjm.pdf",
+      "note": "无感模式，pad=0，最小合法样本",
+      "expect": {
+        "doc_id": "d7ced59e0c51024ad189a1505c96c6a3",
+        "name": "hello-openjm.pdf",
+        "ext": "pdf",
+        "size": 603,
+        "pad": 0,
+        "sha256": "d7ced59e0c51024ad189a1505c96c6a3553e176222f60367bb7d9a98b47c705c"
+      }
+    },
+    {
+      "id": "v02-same-source-new-nonce",
+      "kind": "valid",
+      "file": "valid/v02-same-source-new-nonce.jm",
+      "source": "plain/hello-openjm.pdf",
+      "note": "与 v01 同一明文，nonce 不同，密文必须不同",
+      "expect": {
+        "doc_id": "d7ced59e0c51024ad189a1505c96c6a3",
+        "name": "hello-openjm.pdf",
+        "ext": "pdf",
+        "size": 603,
+        "pad": 0,
+        "sha256": "d7ced59e0c51024ad189a1505c96c6a3553e176222f60367bb7d9a98b47c705c"
+      }
+    },
+    {
+      "id": "v03-password",
+      "kind": "valid",
+      "file": "valid/v03-password.jm",
+      "source": "plain/hello-openjm.pdf",
+      "note": "口令模式，key_id 恒为 0，走 PBKDF2-HMAC-SHA256 10 万次",
+      "expect": {
+        "doc_id": "d7ced59e0c51024ad189a1505c96c6a3",
+        "name": "hello-openjm.pdf",
+        "ext": "pdf",
+        "size": 603,
+        "pad": 0,
+        "sha256": "d7ced59e0c51024ad189a1505c96c6a3553e176222f60367bb7d9a98b47c705c"
+      },
+      "password": "correct horse battery staple",
+      "wrong_password": "wrong horse battery staple"
+    },
+    {
+      "id": "v04-pad-max",
+      "kind": "valid",
+      "file": "valid/v04-pad-max.jm",
+      "source": "plain/hello-openjm.pdf",
+      "note": "pad=4096 上限，验证尾部填充剥离",
+      "expect": {
+        "doc_id": "d7ced59e0c51024ad189a1505c96c6a3",
+        "name": "hello-openjm.pdf",
+        "ext": "pdf",
+        "size": 603,
+        "pad": 4096,
+        "sha256": "d7ced59e0c51024ad189a1505c96c6a3553e176222f60367bb7d9a98b47c705c"
+      }
+    },
+    {
+      "id": "v05-large-multichunk",
+      "kind": "valid",
+      "file": "valid/v05-large-multichunk.jm",
+      "source": "plain/large-192kb.pdf",
+      "note": "约 192KB，跨多个 64KB 分块，pad=1234",
+      "expect": {
+        "doc_id": "6e899d03537f222aa1f04c147c9cd72b",
+        "name": "large-192kb.pdf",
+        "ext": "pdf",
+        "size": 190617,
+        "pad": 1234,
+        "sha256": "6e899d03537f222aa1f04c147c9cd72b580afd69fe8833ccdb98003ff5cce818"
+      }
+    },
+    {
+      "id": "v90-truncated",
+      "kind": "invalid",
+      "file": "invalid/v90-truncated.jm",
+      "error": "JMAuthError",
+      "note": "砍掉尾部 1 字节，模拟 QQ 下载中断"
+    },
+    {
+      "id": "v91-tampered-payload",
+      "kind": "invalid",
+      "file": "invalid/v91-tampered-payload.jm",
+      "error": "JMAuthError",
+      "note": "载荷区翻 1 bit"
+    },
+    {
+      "id": "v92-bad-magic",
+      "kind": "invalid",
+      "file": "invalid/v92-bad-magic.jm",
+      "error": "JMFormatError",
+      "note": "魔数改成 JK01"
+    },
+    {
+      "id": "v93-too-short",
+      "kind": "invalid",
+      "file": "invalid/v93-too-short.jm",
+      "error": "JMFormatError",
+      "note": "40 字节，小于 60 字节下限"
+    },
+    {
+      "id": "v94-unknown-key-id",
+      "kind": "invalid",
+      "file": "invalid/v94-unknown-key-id.jm",
+      "error": "JMFormatError",
+      "note": "key_id=7，测试密钥库里没有"
+    },
+    {
+      "id": "v95-zero-meta-len",
+      "kind": "invalid",
+      "file": "invalid/v95-zero-meta-len.jm",
+      "error": "JMFormatError",
+      "note": "meta_len 置 0"
+    }
+  ]
+}

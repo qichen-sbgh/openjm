@@ -1,0 +1,19 @@
+name: verify-vectors
+
+on:
+  push:
+    paths: ["testvectors/**", "docs/**", ".github/workflows/**"]
+  pull_request:
+    paths: ["testvectors/**", "docs/**"]
+
+jobs:
+  manifest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      # 只做不依赖 SDK 的结构校验：清单自洽、明文 sha256 对得上、头部字段合法。
+      - name: Check manifest integrity
+        run: python .github/scripts/check_vectors.py

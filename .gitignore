@@ -1,0 +1,19 @@
+# 生产文档与密钥绝不入库；测试向量除外
+*.jm
+!testvectors/**/*.jm
+keys.json
+keys.*.json
+!testvectors/keys.test.json
+*.local.json
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+*.egg-info/
+.pytest_cache/
+build/
+dist/
+
+# macOS
+.DS_Store
