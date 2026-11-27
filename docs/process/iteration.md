@@ -57,7 +57,7 @@ app-v0.2.0      # 移动端仓
 
 | 里程碑 | 目标 | 进入条件 | 状态 |
 | --- | --- | --- | --- |
-| M1 Android 地基 | `assembleDebug` 通过；11 个向量在 Android 侧全过 | 无 | 进行中 |
+| M1 Android 地基 | `assembleDebug` 通过；11 个向量在 Android 侧全过 | 无 | ✅ 完成（2026-11-27） |
 | M2 Android 闭环 | 导入 → 私有沙盒 → 书架去重 → PDFium 阅读 → 进度恢复 | M1 完成 | 待开始 |
 | M3 真机兼容 | 四家国产 ROM 的 QQ 唤起与 SAF 兜底 | M2 完成 | 待开始 |
 | M4 iOS 对齐 | 编译校对 CommonCrypto → 唤起 → PDFKit | M3 完成（Android 稳定） | 冻结 |
