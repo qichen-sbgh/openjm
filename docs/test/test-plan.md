@@ -48,7 +48,7 @@
 | SDK 单测 | 30 | ✅ 本地 + CI 绿 |
 | SDK 跨端向量回放 | 12 | ✅ 绿 |
 | 移动端 androidHostTest | 20（3 向量回放 + 6 沙盒落盘 + 6 书架/进度 + 5 持久化） | ✅ 本地全过；CI 里向量相关的 9 例 skip，其余 11 例照跑 |
-| 移动端模拟器 E2E | 5 步（空书架 → VIEW 导入 → 阅读 → 返回写进度 → 杀进程还原） | ✅ 本地一条命令：`openjm-mobile/tools/emulator-e2e.ps1 -Fresh`，未进 CI |
+| 移动端模拟器 E2E | 6 步（空书架 → VIEW 导入 → 阅读 → 返回写进度 → 杀进程还原 → 口令三条路径） | ✅ 本地一条命令：`openjm-mobile/tools/emulator-e2e.ps1`，未进 CI |
 | 移动端真机 E2E | 0 | ⬜ 手工 |
 
 > 移动端已能编译并回放向量（M1 完成），L2 在 Android 侧不再是缺口。
