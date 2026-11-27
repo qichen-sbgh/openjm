@@ -111,11 +111,11 @@ PDF 渲染（`io.legere:pdfiumandroid`，纵向分页列表 + 首页比例占位
 口令弹窗（`PasswordPrompt`，先验证再落盘，错口令不留文件；口令文件的"免密续读"由"只存明文"结构性满足）。
 整条链路已在 Android 16 模拟器上端到端跑通：VIEW 唤起 → 导入落盘 → 书架 → 阅读 → 进度回填 → 杀进程冷启动还原。
 
-未做：页内偏移恢复（`initialScrollRatio` 已透传但未消费）、真机兼容验证。
+未做：真机兼容验证。
 清单维护在仓库 README，不在本文档复制一遍。
 
 ## 8. 已知代价
 
-- **APK 体积**：`pdfiumandroid` 的 AAR 带 arm64-v8a / armeabi-v7a / x86 / x86_64 四套 `libpdfium.so`，
-  debug APK 从 11.5MB 涨到 29MB。群内直发前要配 ABI split，或只保留 arm64-v8a（覆盖绝大多数机型）。
-- **渲染无法自动化**：PDFium 是 Android 原生库，跑不了 host 测试，效果只能进真机清单 §3.3。
+- **APK 体积**：`pdfiumandroid` 的 AAR 带四套 `libpdfium.so`。debug 包保留全 ABI（模拟器回归要用 x86_64），
+  29MB；release 只打 arm64-v8a / armeabi-v7a，16MB。群内直发用 release 包。
+- **渲染无法自动化**：PDFium 是 Android 原生库，跑不了 host 测试；渲染效果靠模拟器 E2E 加真机清单 §3.3。
