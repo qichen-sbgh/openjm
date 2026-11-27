@@ -2,9 +2,10 @@ name: checks
 
 on:
   push:
-    paths: ["docs/**", "testvectors/**", "**/*.md", ".github/**"]
+    # 仓库属性文件（.gitattributes / .gitignore）会改变检出后的字节，必须一起触发
+    paths: ["docs/**", "testvectors/**", "**/*.md", ".github/**", ".gitattributes", ".gitignore"]
   pull_request:
-    paths: ["docs/**", "testvectors/**", "**/*.md", ".github/**"]
+    paths: ["docs/**", "testvectors/**", "**/*.md", ".github/**", ".gitattributes", ".gitignore"]
 
 jobs:
   docs:
