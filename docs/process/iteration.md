@@ -3,22 +3,23 @@
 | 项 | 值 |
 | --- | --- |
 | 状态 | 生效，v1 |
-| 最后更新 | 2026-11-27 |
-| 适用范围 | `openjm` / `openjm-sdk` / `openjm-mobile` 三仓 |
+| 最后更新 | 2026-11-28 |
+| 适用范围 | `openjm` / `openjm-sdk` / `openjm-mobile` / `astrbot_plugin_openjm` 四仓 |
 
 这份文件是“怎么推进工作”的唯一约定。它只管流程，不管技术——技术看 [`tech/`](../tech/)，需求看 [`requirements/`](../requirements/)。
 
 ---
 
-## 1. 三仓职责
+## 1. 仓库职责
 
 | 仓库 | 拥有什么 | 不许做什么 |
 | --- | --- | --- |
 | `openjm` | 协议规范、决策记录、测试向量、需求/测试/流程文档 | 不写业务实现 |
 | `openjm-sdk` | 发送端实现 | 不定义协议、不许自己造向量 |
 | `openjm-mobile` | 消费端实现（Android + iOS） | 同上 |
+| `astrbot_plugin_openjm` | 群聊自动化（发号 → 出 `.jm`），只做调用编排 | 不实现协议、不自己造向量、不复制 SDK 代码（依赖要 pin tag） |
 
-**判断某样东西该放哪**：能被另外两个仓库“引用为依据”的，放总仓；只能被一个仓库使用的，放那个仓库。
+**判断某样东西该放哪**：能被其它仓库“引用为依据”的，放总仓；只能被一个仓库使用的，放那个仓库。
 
 ## 2. 版本体系
 
@@ -30,17 +31,20 @@
 | 文档 | `v1`、`v2`（文档头字段，**不进文件名**） | `docs/` | 需求或规范有实质变化，而非错别字 |
 | SDK | `0.x.y`（SemVer） | `pyproject.toml` + tag | 接口/行为变化 |
 | App | `0.x.y`（versionName） | `build.gradle.kts` + tag | 可分发的行为变化 |
+| 插件 | `0.x.y` | `metadata.yaml` + tag | 玩家可见行为变化（配置项/指令/媒体格式） |
 
-Tag 命名（三仓统一）：
+Tag 命名（四仓统一）：
 
 ```text
 proto-v1        # 总仓，协议冻结点，向量随 tag 走
 docs-v2         # 总仓，需求/测试文档大改（可选）
-sdk-v0.2.0      # SDK 仓
-app-v0.2.0      # 移动端仓
+sdk-v0.1.0      # SDK 仓
+app-v0.1.0      # 移动端仓
+plugin-v0.1.0   # 插件仓
 ```
 
-另两仓 README 首屏必须有一行 `compatible: proto-v1`，协议升级时同步改。
+两个实现仓（SDK / mobile）README 首屏必须有一行 `compatible: proto-v1`，协议升级时同步改；
+插件仓不实现协议，它只需要把依赖 pin 到某个 `sdk-vX.Y.Z`。
 
 ## 3. 迭代节奏
 
@@ -106,7 +110,7 @@ PR 描述用 [`.github/pull_request_template.md`](../../.github/pull_request_tem
 3. **改规范**：就地更新 [`protocol.md`](../tech/protocol.md)（不新建 `protocol-v2.md`），把文档头的协议版本改成 `JM02`，并同步 [`decisions.md`](../tech/decisions.md)。
 4. **重生成向量**：`python testvectors/make_vectors.py`，提交新向量与 `manifest.json`。
 5. **三端对齐**：SDK 与移动端各跑一遍，所有向量通过，结果贴 PR。
-6. **打 tag**：`proto-v2`，两仓 README 的 `compatible:` 行同步升级。
+6. **打 tag**：`proto-v2`，两个实现仓 README 的 `compatible:` 行同步升级。
 7. **兼容说明**：明确“旧文件还能不能打开、旧 App 还能不能用新文件”。默认要求：新 App 能解旧文件。
 
 只加验证用例、不动字节语义的，不算协议变更，只算向量补充（走 `test(vectors)`）。
@@ -116,7 +120,7 @@ PR 描述用 [`.github/pull_request_template.md`](../../.github/pull_request_tem
 | 改了什么 | 必须同时更新 |
 | --- | --- |
 | 需求（增删改 FR） | `requirements/requirements.md` + `test/acceptance.md` 追溯矩阵 |
-| 字节语义 | `tech/protocol.md` + `tech/decisions.md` + 向量 + 两仓 `compatible:` |
+| 字节语义 | `tech/protocol.md` + `tech/decisions.md` + 向量 + 两个实现仓的 `compatible:` |
 | 实现行为（不改协议） | 对应仓库代码 + 测试 + `tech/` 里对应的设计文档 |
 | 测试策略 | `test/test-plan.md` + `acceptance.md` |
 | 流程 | `process/iteration.md` 或 `doc-rules.md` 本身 |
@@ -135,8 +139,9 @@ PR 描述用 [`.github/pull_request_template.md`](../../.github/pull_request_tem
 ## 9. 发布与回滚
 
 - **SDK**：`sdk-vX.Y.Z` tag → 本地 `pip install` 验证 → 通知使用方升级。
-- **App**：群内直发 APK / TestFlight。发布前必须走完 L3 真机清单。
-- **回滚**：App 回滚 = 重发上一个版本的包；SDK 回滚 = 回退 tag 并说明原因。
+- **App**：推送 `app-vX.Y.Z` tag，GitHub Actions 注入密钥与签名材料出包并挂 Release（见 `openjm-mobile` 的 `release.yml`）；群内直发 APK。
+- **插件**：推送 `plugin-vX.Y.Z` tag；AstrBot 侧是 git 拉取，用户更新插件目录即可。发布前把 `requirements.txt` 里的 SDK pin 指到对应 `sdk-vX.Y.Z`。
+- **回滚**：App 回滚 = 重发上一个版本的包；SDK 回滚 = 回退 tag 并说明原因；插件回滚 = 回退 tag 并通知用户重拉。
 - **密钥**：轮换流程见 [`key-registry.md`](../tech/key-registry.md)，移除旧密钥是**单独一次发布**，不许和功能一起发。
 
 ## 10. 记录
@@ -157,6 +162,14 @@ PR 描述用 [`.github/pull_request_template.md`](../../.github/pull_request_tem
 ```text
 总仓打 proto-v1 ──▶ SDK/mobile 的 README 写 compatible: proto-v1
                  └─▶ CI 按 tag 拉向量，跑不过就是红的
+
+SDK 打 sdk-v0.1.0 ──▶ 插件 requirements.txt pin 到该 tag
+                    └─▶ 插件 CI 装这个 tag 跑测试，装不上就是红的
 ```
 
-三仓之间**不引用彼此代码**（除了 SDK 被总仓的生成脚本用一下），只共享规范与样本。
+仓库之间**不复制代码**。唯一允许的代码依赖是两处，都有明确边界：
+
+- 总仓的向量生成脚本导入 SDK（`testvectors/make_vectors.py`）；
+- 插件通过 pip 依赖 SDK 包，并 pin 到 tag——不是把 SDK 源码拷进插件。
+
+其余一切只共享规范与样本。

@@ -1,6 +1,6 @@
 # 参与与贡献
 
-这个仓库是 `openjm` 三仓里的**总仓**：协议、需求、测试、流程都在这儿，实现分别在 `openjm-sdk` 与 `openjm-mobile`。
+这个仓库是 `openjm` 四仓里的**总仓**：协议、需求、测试、流程都在这儿，实现分别在 `openjm-sdk`、`openjm-mobile`，群聊自动化在 `astrbot_plugin_openjm`。
 
 动手前先读两篇，能省掉后面大部分返工：
 
