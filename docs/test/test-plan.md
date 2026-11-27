@@ -37,7 +37,7 @@
 | 测试密钥 | `key_id=254`，由 `sha256("openjm-test-vector-key-v1")` 派生，**只用于向量** |
 | 生产密钥 | 不参与测试，任何测试都不得引用 |
 | 真实样本 | 自备 PDF，不入库；`.gitignore` 已挡 `*.pdf` / `*.jm` |
-| 真机 | 待建清单，见验收文档 §3 |
+| 真机 | **不作为发版门槛**（2026-11-27 决定：用模拟器代替真机验收）；有设备时按验收文档 §3 抽验 ROM 差异项 |
 | 模拟器 | AVD `openjm36`：`system-images;android-36;default;x86_64`，WHPX 加速、`-no-window` 无头启动；端到端回归用 `openjm-mobile/tools/emulator-e2e.ps1`（自动起模拟器、构建、按文本定位点控件） |
 
 ## 4. 自动化现状
@@ -59,7 +59,7 @@
 
 - **每次 push**：L0 + L1 自动跑，红了不许合并（见 [`iteration.md`](../process/iteration.md) §4）。
 - **每次改协议或向量**：L2 必须在三端各跑一遍，结果贴到 PR 描述里。
-- **每个迭代收口**：先跑 `openjm-mobile/tools/emulator-e2e.ps1 -Fresh`（模拟器端到端，一条命令），再按真机清单验 ROM 相关项（唤起、SAF、沙盒可见性）。
+- **每个迭代收口**：先跑 `openjm-mobile/tools/emulator-e2e.ps1`（模拟器端到端，一条命令）；真机 ROM 项（真实 QQ 唤起、SAF 选择器、沙盒对文件管理器可见）按需抽验，不阻塞收口。
 - **每个发版**：L4 兼容矩阵 + 性能采样，结果写进 PR 描述（不落成仓库文件）。
 
 ## 6. 缺陷分级
